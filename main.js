@@ -127,6 +127,7 @@ h1, h2 {
     padding: 0px 16px 8px 16px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-height: 200px;
 }
 
 .task-column header {
@@ -147,22 +148,28 @@ h1, h2 {
     gap: 12px;
 }
 
-.task-list li {
-    cursor: pointer;
+.task-item {
+    cursor: grab;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     padding: 16px 12px;
     border-radius: 4px;
     background-color: white;
 }
 
-.task-list li:hover {
+.task-item:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.task-item {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.task-item:active {
+    cursor: grabbing;
 }
+
+/* .task-item.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+} */
 
 .task-meta span {
     padding: 2px 6px;
@@ -232,7 +239,7 @@ h1, h2 {
 .task-form button[value="delete"] {
     background-color: transparent;
     font-size: 1.2rem;
-}`, "",{"version":3,"sources":["webpack://./src/styles.css"],"names":[],"mappings":"AAAA;IACI,SAAS;IACT,aAAa;IACb,aAAa;IACb,yCAAyC;AAC7C;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,OAAO;IACP,aAAa;IACb,yBAAyB;IACzB,YAAY;AAChB;;AAEA;IACI,qBAAqB;IACrB,UAAU;IACV,aAAa;IACb,sBAAsB;IACtB,QAAQ;AACZ;;AAEA;IACI,eAAe;IACf,iBAAiB;IACjB,kBAAkB;IAClB,iCAAiC;IACjC,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;AACvB;;AAEA;IACI,2CAA2C;AAC/C;;;AAGA;IACI,0CAA0C,EAAE,kCAAkC;IAC9E,iBAAiB;AACrB;;AAEA;IACI,uBAAuB;IACvB,YAAY;IACZ,YAAY;IACZ,iBAAiB;IACjB,eAAe;IACf,cAAc;IACd,UAAU;IACV,wBAAwB;IACxB,cAAc;AAClB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,WAAW;IACX,gBAAgB;IAChB,YAAY;IACZ,0CAA0C;IAC1C,YAAY;IACZ,2CAA2C;IAC3C,kBAAkB;IAClB,iBAAiB;IACjB,eAAe;IACf,yBAAyB;AAC7B;;AAEA;IACI,0CAA0C;IAC1C,sCAAsC;IACtC,2BAA2B;AAC/B;;AAEA;IACI,wBAAwB;AAC5B;;AAEA;IACI,OAAO;IACP,aAAa;AACjB;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,SAAS;AACb;;AAEA;IACI,OAAO;IACP,yBAAyB;IACzB,0BAA0B;IAC1B,kBAAkB;IAClB,wCAAwC;AAC5C;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;AACvB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qBAAqB;IACrB,UAAU;IACV,aAAa;IACb,sBAAsB;IACtB,SAAS;AACb;;AAEA;IACI,eAAe;IACf,kBAAkB;IAClB,kBAAkB;IAClB,uBAAuB;AAC3B;;AAEA;IACI,wCAAwC;AAC5C;;AAEA;IACI,aAAa;IACb,sBAAsB;IACtB,QAAQ;AACZ;;AAEA;IACI,gBAAgB;IAChB,kBAAkB;IAClB,kBAAkB;AACtB;;AAEA;EACE,mBAAmB;EACnB,cAAc;AAChB;;AAEA;EACE,mBAAmB;EACnB,cAAc;AAChB;;AAEA;EACE,mBAAmB;EACnB,cAAc;AAChB;;AAEA;EACE,mBAAmB;EACnB,cAAc;AAChB;;AAEA;;IAEI,kBAAkB;AACtB;;AAEA;;IAEI,aAAa;IACb,sBAAsB;IACtB,SAAS;AACb;;AAEA;;IAEI,iBAAiB;IACjB,YAAY;IACZ,kBAAkB;IAClB,eAAe;IACf,eAAe;IACf,oBAAoB;AACxB;;AAEA;;IAEI,2BAA2B;AAC/B;;AAEA;;IAEI,yBAAyB;IACzB,YAAY;AAChB;;AAEA;;IAEI,yBAAyB;IACzB,YAAY;AAChB;;AAEA;IACI,6BAA6B;IAC7B,iBAAiB;AACrB","sourcesContent":["body {\n    margin: 0;\n    height: 100vh;\n    display: flex;\n    font-family: Arial, Helvetica, sans-serif;\n}\n\nh1, h2 {\n    font-weight: 500;\n}\n\n.sidebar {\n    flex: 1;\n    padding: 24px;\n    background-color: #0d6efd;\n    color: white;\n}\n\n.project-list {\n    list-style-type: none;\n    padding: 0;\n    display: flex;\n    flex-direction: column;\n    gap: 8px;\n}\n\n.project-list li {\n    cursor: pointer;\n    padding: 8px 12px;\n    border-radius: 4px;\n    transition: background-color 0.3s;\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n}\n\n.project-list li:hover {\n    background-color: rgba(255, 255, 255, 0.25);\n}\n\n\n.project-list li.active {\n    background-color: rgba(255, 255, 255, 0.3); /* stronger highlight for active */\n    font-weight: bold;\n}\n\n.delete-project-btn {\n    background: transparent;\n    border: none;\n    color: white;\n    font-size: 1.5rem;\n    cursor: pointer;\n    padding: 0 4px;\n    opacity: 0;\n    transition: opacity 0.2s;\n    line-height: 1;\n}\n\n.project-list li:hover .delete-project-btn {\n    opacity: 0.6;\n}\n\n.delete-project-btn:hover {\n    opacity: 1 !important;\n}\n\n#add-project-btn {\n    width: 100%;\n    margin-top: 16px;\n    padding: 4px;\n    background-color: rgba(255, 255, 255, 0.2);\n    color: white;\n    border: 2px dashed rgba(255, 255, 255, 0.5);\n    border-radius: 6px;\n    font-size: 1.5rem;\n    cursor: pointer;\n    transition: all 0.3s ease;\n}\n\n.add-project-btn:hover {\n    background-color: rgba(255, 255, 255, 0.3);\n    border-color: rgba(255, 255, 255, 0.8);\n    transform: translateY(-2px);\n}\n\n.add-project-btn:active {\n    transform: translateY(0);\n}\n\n.main {\n    flex: 3;\n    padding: 16px;\n}\n\n.task-board {\n    display: flex;\n    justify-content: space-between;\n    gap: 16px;\n}\n\n.task-column {\n    flex: 1;\n    background-color: #f5f5f5;\n    padding: 0px 16px 8px 16px;\n    border-radius: 8px;\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n\n.task-column header {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n}\n\n.add-task-btn {\n    cursor: pointer;\n}\n\n.task-list {\n    list-style-type: none;\n    padding: 0;\n    display: flex;\n    flex-direction: column;\n    gap: 12px;\n}\n\n.task-list li {\n    cursor: pointer;\n    padding: 16px 12px;\n    border-radius: 4px;\n    background-color: white;\n}\n\n.task-list li:hover {\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);\n}\n\n.task-item {\n    display: flex;\n    flex-direction: column;\n    gap: 8px;\n}\n\n.task-meta span {\n    padding: 2px 6px;\n    border-radius: 4px;\n    font-size: 0.75rem;\n}\n\n.task-item[data-priority=\"high\"] .task-priority {\n  background: #ffe5e5;\n  color: #d32f2f;\n}\n\n.task-item[data-priority=\"medium\"] .task-priority {\n  background: #e3f2fd;\n  color: #1976d2;\n}\n\n.task-item[data-priority=\"low\"] .task-priority {\n  background: #e8f5e9;\n  color: #2e7d32;\n}\n\n.task-deadline {\n  background: #f5f5f5;\n  color: #616161;\n}\n\n#task-dialog,\n#project-dialog {\n    border-radius: 4px;\n}\n\n.task-form,\n.project-form {\n    display: flex;\n    flex-direction: column;\n    gap: 12px;\n}\n\n.task-form button,\n.project-form button {\n    padding: 8px 16px;\n    border: none;\n    border-radius: 4px;\n    font-size: 1rem;\n    cursor: pointer;\n    transition: all 0.2s;\n}\n\n.task-form button:hover,\n.project-form button:hover {\n    transform: translateY(-2px);\n}\n\n.task-form button[value=\"save\"],\n.project-form button[value=\"save\"] {\n    background-color: #0d6efd;\n    color: white;\n}\n\n.task-form button[value=\"cancel\"],\n.project-form button[value=\"cancel\"] {\n    background-color: #9ca3af;\n    color: white;\n}\n\n.task-form button[value=\"delete\"] {\n    background-color: transparent;\n    font-size: 1.2rem;\n}"],"sourceRoot":""}]);
+}`, "",{"version":3,"sources":["webpack://./src/styles.css"],"names":[],"mappings":"AAAA;IACI,SAAS;IACT,aAAa;IACb,aAAa;IACb,yCAAyC;AAC7C;;AAEA;IACI,gBAAgB;AACpB;;AAEA;IACI,OAAO;IACP,aAAa;IACb,yBAAyB;IACzB,YAAY;AAChB;;AAEA;IACI,qBAAqB;IACrB,UAAU;IACV,aAAa;IACb,sBAAsB;IACtB,QAAQ;AACZ;;AAEA;IACI,eAAe;IACf,iBAAiB;IACjB,kBAAkB;IAClB,iCAAiC;IACjC,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;AACvB;;AAEA;IACI,2CAA2C;AAC/C;;;AAGA;IACI,0CAA0C,EAAE,kCAAkC;IAC9E,iBAAiB;AACrB;;AAEA;IACI,uBAAuB;IACvB,YAAY;IACZ,YAAY;IACZ,iBAAiB;IACjB,eAAe;IACf,cAAc;IACd,UAAU;IACV,wBAAwB;IACxB,cAAc;AAClB;;AAEA;IACI,YAAY;AAChB;;AAEA;IACI,qBAAqB;AACzB;;AAEA;IACI,WAAW;IACX,gBAAgB;IAChB,YAAY;IACZ,0CAA0C;IAC1C,YAAY;IACZ,2CAA2C;IAC3C,kBAAkB;IAClB,iBAAiB;IACjB,eAAe;IACf,yBAAyB;AAC7B;;AAEA;IACI,0CAA0C;IAC1C,sCAAsC;IACtC,2BAA2B;AAC/B;;AAEA;IACI,wBAAwB;AAC5B;;AAEA;IACI,OAAO;IACP,aAAa;AACjB;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,SAAS;AACb;;AAEA;IACI,OAAO;IACP,yBAAyB;IACzB,0BAA0B;IAC1B,kBAAkB;IAClB,wCAAwC;IACxC,iBAAiB;AACrB;;AAEA;IACI,aAAa;IACb,8BAA8B;IAC9B,mBAAmB;AACvB;;AAEA;IACI,eAAe;AACnB;;AAEA;IACI,qBAAqB;IACrB,UAAU;IACV,aAAa;IACb,sBAAsB;IACtB,SAAS;AACb;;AAEA;IACI,YAAY;IACZ,aAAa;IACb,sBAAsB;IACtB,QAAQ;IACR,kBAAkB;IAClB,kBAAkB;IAClB,uBAAuB;AAC3B;;AAEA;IACI,wCAAwC;AAC5C;;AAEA;IACI,gBAAgB;AACpB;;AAEA;;;GAGG;;AAEH;IACI,gBAAgB;IAChB,kBAAkB;IAClB,kBAAkB;AACtB;;AAEA;EACE,mBAAmB;EACnB,cAAc;AAChB;;AAEA;EACE,mBAAmB;EACnB,cAAc;AAChB;;AAEA;EACE,mBAAmB;EACnB,cAAc;AAChB;;AAEA;EACE,mBAAmB;EACnB,cAAc;AAChB;;AAEA;;IAEI,kBAAkB;AACtB;;AAEA;;IAEI,aAAa;IACb,sBAAsB;IACtB,SAAS;AACb;;AAEA;;IAEI,iBAAiB;IACjB,YAAY;IACZ,kBAAkB;IAClB,eAAe;IACf,eAAe;IACf,oBAAoB;AACxB;;AAEA;;IAEI,2BAA2B;AAC/B;;AAEA;;IAEI,yBAAyB;IACzB,YAAY;AAChB;;AAEA;;IAEI,yBAAyB;IACzB,YAAY;AAChB;;AAEA;IACI,6BAA6B;IAC7B,iBAAiB;AACrB","sourcesContent":["body {\n    margin: 0;\n    height: 100vh;\n    display: flex;\n    font-family: Arial, Helvetica, sans-serif;\n}\n\nh1, h2 {\n    font-weight: 500;\n}\n\n.sidebar {\n    flex: 1;\n    padding: 24px;\n    background-color: #0d6efd;\n    color: white;\n}\n\n.project-list {\n    list-style-type: none;\n    padding: 0;\n    display: flex;\n    flex-direction: column;\n    gap: 8px;\n}\n\n.project-list li {\n    cursor: pointer;\n    padding: 8px 12px;\n    border-radius: 4px;\n    transition: background-color 0.3s;\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n}\n\n.project-list li:hover {\n    background-color: rgba(255, 255, 255, 0.25);\n}\n\n\n.project-list li.active {\n    background-color: rgba(255, 255, 255, 0.3); /* stronger highlight for active */\n    font-weight: bold;\n}\n\n.delete-project-btn {\n    background: transparent;\n    border: none;\n    color: white;\n    font-size: 1.5rem;\n    cursor: pointer;\n    padding: 0 4px;\n    opacity: 0;\n    transition: opacity 0.2s;\n    line-height: 1;\n}\n\n.project-list li:hover .delete-project-btn {\n    opacity: 0.6;\n}\n\n.delete-project-btn:hover {\n    opacity: 1 !important;\n}\n\n#add-project-btn {\n    width: 100%;\n    margin-top: 16px;\n    padding: 4px;\n    background-color: rgba(255, 255, 255, 0.2);\n    color: white;\n    border: 2px dashed rgba(255, 255, 255, 0.5);\n    border-radius: 6px;\n    font-size: 1.5rem;\n    cursor: pointer;\n    transition: all 0.3s ease;\n}\n\n.add-project-btn:hover {\n    background-color: rgba(255, 255, 255, 0.3);\n    border-color: rgba(255, 255, 255, 0.8);\n    transform: translateY(-2px);\n}\n\n.add-project-btn:active {\n    transform: translateY(0);\n}\n\n.main {\n    flex: 3;\n    padding: 16px;\n}\n\n.task-board {\n    display: flex;\n    justify-content: space-between;\n    gap: 16px;\n}\n\n.task-column {\n    flex: 1;\n    background-color: #f5f5f5;\n    padding: 0px 16px 8px 16px;\n    border-radius: 8px;\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n    min-height: 200px;\n}\n\n.task-column header {\n    display: flex;\n    justify-content: space-between;\n    align-items: center;\n}\n\n.add-task-btn {\n    cursor: pointer;\n}\n\n.task-list {\n    list-style-type: none;\n    padding: 0;\n    display: flex;\n    flex-direction: column;\n    gap: 12px;\n}\n\n.task-item {\n    cursor: grab;\n    display: flex;\n    flex-direction: column;\n    gap: 8px;\n    padding: 16px 12px;\n    border-radius: 4px;\n    background-color: white;\n}\n\n.task-item:hover {\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);\n}\n\n.task-item:active {\n    cursor: grabbing;\n}\n\n/* .task-item.dragging {\n    opacity: 0.5;\n    cursor: grabbing;\n} */\n\n.task-meta span {\n    padding: 2px 6px;\n    border-radius: 4px;\n    font-size: 0.75rem;\n}\n\n.task-item[data-priority=\"high\"] .task-priority {\n  background: #ffe5e5;\n  color: #d32f2f;\n}\n\n.task-item[data-priority=\"medium\"] .task-priority {\n  background: #e3f2fd;\n  color: #1976d2;\n}\n\n.task-item[data-priority=\"low\"] .task-priority {\n  background: #e8f5e9;\n  color: #2e7d32;\n}\n\n.task-deadline {\n  background: #f5f5f5;\n  color: #616161;\n}\n\n#task-dialog,\n#project-dialog {\n    border-radius: 4px;\n}\n\n.task-form,\n.project-form {\n    display: flex;\n    flex-direction: column;\n    gap: 12px;\n}\n\n.task-form button,\n.project-form button {\n    padding: 8px 16px;\n    border: none;\n    border-radius: 4px;\n    font-size: 1rem;\n    cursor: pointer;\n    transition: all 0.2s;\n}\n\n.task-form button:hover,\n.project-form button:hover {\n    transform: translateY(-2px);\n}\n\n.task-form button[value=\"save\"],\n.project-form button[value=\"save\"] {\n    background-color: #0d6efd;\n    color: white;\n}\n\n.task-form button[value=\"cancel\"],\n.project-form button[value=\"cancel\"] {\n    background-color: #9ca3af;\n    color: white;\n}\n\n.task-form button[value=\"delete\"] {\n    background-color: transparent;\n    font-size: 1.2rem;\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -705,12 +712,12 @@ const DataManager = {
             }
         },
 
-        update(projectId, taskId, taskData) {
+        update(projectId, taskId, updates) {
             const project = DataManager.Projects.find(projectId);
             if (project) {
                 const task = project.tasks.find(t => t.id === taskId);
                 if (task) {
-                    Object.assign(task, taskData);
+                    Object.assign(task, updates);
                     DataManager.save();
                     return task;
                 }
@@ -750,24 +757,24 @@ const DataView = {
     renderProjects(projects, activeProjectId) {
         const projectList = document.querySelector('.project-list');
         projectList.innerHTML = '';
-        
+
         projects.forEach((project, index) => {
             const li = document.createElement('li');
             li.dataset.projectId = project.id;
-            
+
             if (activeProjectId === project.id || (!activeProjectId && index === 0)) {
                 li.classList.add('active');
             }
-            
+
             const nameSpan = document.createElement('span');
             nameSpan.textContent = project.name;
             nameSpan.className = 'project-name';
-            
+
             const deleteBtn = document.createElement('button');
             deleteBtn.textContent = '×';
             deleteBtn.className = 'delete-project-btn';
             deleteBtn.dataset.projectId = project.id;
-            
+
             li.appendChild(nameSpan);
             li.appendChild(deleteBtn);
             projectList.appendChild(li);
@@ -788,6 +795,7 @@ const DataView = {
                     li.dataset.taskId = task.id;
                     li.dataset.priority = task.priority;
                     li.dataset.deadline = task.deadline;
+                    li.draggable = true;
 
                     li.innerHTML = `
                         <span class="task-name">${task.name}</span>
@@ -1031,7 +1039,7 @@ addProjectButton.addEventListener('click', () => {
 saveProjectButton.addEventListener('click', () => {
     const projectNameInput = document.querySelector('input[name="project-name"]');
     const projectName = projectNameInput.value.trim();
-    
+
     if (projectName) {
         const newProject = _dataManager_js__WEBPACK_IMPORTED_MODULE_0__.DataManager.Projects.add(projectName);
         refreshProjectView(newProject.id);
@@ -1049,19 +1057,19 @@ projectList.addEventListener('click', (e) => {
         e.stopPropagation();
         const projectId = parseInt(e.target.dataset.projectId);
         const index = _dataManager_js__WEBPACK_IMPORTED_MODULE_0__.DataManager.projects.findIndex(p => p.id === projectId);
-        
+
         _dataManager_js__WEBPACK_IMPORTED_MODULE_0__.DataManager.Projects.delete(projectId);
-        
+
         // Select adjacent project
         const newActiveIndex = index > 0 ? index - 1 : 0;
         const newActiveId = _dataManager_js__WEBPACK_IMPORTED_MODULE_0__.DataManager.projects[newActiveIndex]?.id;
-        
+
         refreshProjectView(newActiveId);
         refreshTaskView();
         updateProjectHeader();
         return;
     }
-    
+
     // Select project
     if (e.target.closest('li')) {
         const projectId = parseInt(e.target.closest('li').dataset.projectId);
@@ -1078,12 +1086,55 @@ const addTaskButtons = document.querySelectorAll('.add-task-btn');
 const saveTaskButton = document.querySelector('.task-form button[value="save"]');
 const deleteTaskButton = document.querySelector('.task-form button[value="delete"]');
 
+// Drag and drop tasks to update their status
+let dragStarted = false;
+
+taskBoard.addEventListener('dragstart', (e) => {
+    if (e.target.classList.contains('task-item')) {
+        dragStarted = true;
+        e.target.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+    }
+});
+
+taskBoard.addEventListener('dragend', (e) => {
+    if (e.target.classList.contains('task-item')) {
+        e.target.classList.remove('dragging');
+    }
+});
+
+taskBoard.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const column = e.target.closest('.task-column');
+    if (column) {
+        e.dataTransfer.dropEffect = 'move';
+    }
+});
+
+taskBoard.addEventListener('drop', (e) => {
+    e.preventDefault();
+
+    const column = e.target.closest('.task-column');
+    if (!column) return;
+
+    const draggingTask = document.querySelector('.dragging');
+    if (!draggingTask) return;
+
+    const newStatus = column.dataset.status;
+    const taskId = parseInt(draggingTask.dataset.taskId);
+    const projectId = getActiveProjectId();
+
+    // Update task status
+    _dataManager_js__WEBPACK_IMPORTED_MODULE_0__.DataManager.Tasks.update(projectId, taskId, { status: newStatus });
+    refreshTaskView();
+});
+
 // Add task (click + button)
 addTaskButtons.forEach(button => {
     button.addEventListener('click', (e) => {
         const column = e.target.closest('.task-column');
         const status = column.dataset.status;
-        
+
         clearTaskForm();
         openDialog(taskDialog, { status });
     });
@@ -1093,11 +1144,11 @@ addTaskButtons.forEach(button => {
 taskBoard.addEventListener('click', (e) => {
     const taskItem = e.target.closest('.task-item');
     if (!taskItem) return;
-    
+
     const taskId = parseInt(taskItem.dataset.taskId);
     const project = getActiveProject();
     const task = project?.tasks.find(t => t.id === taskId);
-    
+
     if (task) {
         populateTaskForm(task);
         openDialog(taskDialog, { status: task.status, taskId });
@@ -1108,20 +1159,20 @@ taskBoard.addEventListener('click', (e) => {
 saveTaskButton.addEventListener('click', () => {
     const taskId = taskDialog.dataset.taskId;
     const projectId = getActiveProjectId();
-    
+
     if (!projectId) return;
-    
+
     const taskData = {
         ...getTaskFormData(),
         status: taskDialog.dataset.status,
     };
-    
+
     if (taskId) {
         _dataManager_js__WEBPACK_IMPORTED_MODULE_0__.DataManager.Tasks.update(projectId, parseInt(taskId), taskData);
     } else {
         _dataManager_js__WEBPACK_IMPORTED_MODULE_0__.DataManager.Tasks.add(projectId, taskData);
     }
-    
+
     closeDialog(taskDialog, clearTaskForm);
     refreshTaskView();
 });
