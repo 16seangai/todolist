@@ -143,10 +143,9 @@ h1, h2 {
     cursor: grabbing;
 }
 
-/* .task-item.dragging {
+.task-item.dragging {
     opacity: 0.5;
-    cursor: grabbing;
-} */
+}
 
 .task-meta span {
     padding: 2px 6px;
