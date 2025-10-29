@@ -104,6 +104,7 @@ h1, h2 {
     padding: 0px 16px 8px 16px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-height: 200px;
 }
 
 .task-column header {
@@ -124,22 +125,28 @@ h1, h2 {
     gap: 12px;
 }
 
-.task-list li {
-    cursor: pointer;
+.task-item {
+    cursor: grab;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     padding: 16px 12px;
     border-radius: 4px;
     background-color: white;
 }
 
-.task-list li:hover {
+.task-item:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.task-item {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+.task-item:active {
+    cursor: grabbing;
 }
+
+/* .task-item.dragging {
+    opacity: 0.5;
+    cursor: grabbing;
+} */
 
 .task-meta span {
     padding: 2px 6px;

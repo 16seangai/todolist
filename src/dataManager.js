@@ -68,12 +68,12 @@ const DataManager = {
             }
         },
 
-        update(projectId, taskId, taskData) {
+        update(projectId, taskId, updates) {
             const project = DataManager.Projects.find(projectId);
             if (project) {
                 const task = project.tasks.find(t => t.id === taskId);
                 if (task) {
-                    Object.assign(task, taskData);
+                    Object.assign(task, updates);
                     DataManager.save();
                     return task;
                 }

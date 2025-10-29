@@ -86,7 +86,7 @@ addProjectButton.addEventListener('click', () => {
 saveProjectButton.addEventListener('click', () => {
     const projectNameInput = document.querySelector('input[name="project-name"]');
     const projectName = projectNameInput.value.trim();
-    
+
     if (projectName) {
         const newProject = DataManager.Projects.add(projectName);
         refreshProjectView(newProject.id);
@@ -104,19 +104,19 @@ projectList.addEventListener('click', (e) => {
         e.stopPropagation();
         const projectId = parseInt(e.target.dataset.projectId);
         const index = DataManager.projects.findIndex(p => p.id === projectId);
-        
+
         DataManager.Projects.delete(projectId);
-        
+
         // Select adjacent project
         const newActiveIndex = index > 0 ? index - 1 : 0;
         const newActiveId = DataManager.projects[newActiveIndex]?.id;
-        
+
         refreshProjectView(newActiveId);
         refreshTaskView();
         updateProjectHeader();
         return;
     }
-    
+
     // Select project
     if (e.target.closest('li')) {
         const projectId = parseInt(e.target.closest('li').dataset.projectId);
@@ -133,12 +133,55 @@ const addTaskButtons = document.querySelectorAll('.add-task-btn');
 const saveTaskButton = document.querySelector('.task-form button[value="save"]');
 const deleteTaskButton = document.querySelector('.task-form button[value="delete"]');
 
+// Drag and drop tasks to update their status
+let dragStarted = false;
+
+taskBoard.addEventListener('dragstart', (e) => {
+    if (e.target.classList.contains('task-item')) {
+        dragStarted = true;
+        e.target.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+    }
+});
+
+taskBoard.addEventListener('dragend', (e) => {
+    if (e.target.classList.contains('task-item')) {
+        e.target.classList.remove('dragging');
+    }
+});
+
+taskBoard.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    const column = e.target.closest('.task-column');
+    if (column) {
+        e.dataTransfer.dropEffect = 'move';
+    }
+});
+
+taskBoard.addEventListener('drop', (e) => {
+    e.preventDefault();
+
+    const column = e.target.closest('.task-column');
+    if (!column) return;
+
+    const draggingTask = document.querySelector('.dragging');
+    if (!draggingTask) return;
+
+    const newStatus = column.dataset.status;
+    const taskId = parseInt(draggingTask.dataset.taskId);
+    const projectId = getActiveProjectId();
+
+    // Update task status
+    DataManager.Tasks.update(projectId, taskId, { status: newStatus });
+    refreshTaskView();
+});
+
 // Add task (click + button)
 addTaskButtons.forEach(button => {
     button.addEventListener('click', (e) => {
         const column = e.target.closest('.task-column');
         const status = column.dataset.status;
-        
+
         clearTaskForm();
         openDialog(taskDialog, { status });
     });
@@ -148,11 +191,11 @@ addTaskButtons.forEach(button => {
 taskBoard.addEventListener('click', (e) => {
     const taskItem = e.target.closest('.task-item');
     if (!taskItem) return;
-    
+
     const taskId = parseInt(taskItem.dataset.taskId);
     const project = getActiveProject();
     const task = project?.tasks.find(t => t.id === taskId);
-    
+
     if (task) {
         populateTaskForm(task);
         openDialog(taskDialog, { status: task.status, taskId });
@@ -163,20 +206,20 @@ taskBoard.addEventListener('click', (e) => {
 saveTaskButton.addEventListener('click', () => {
     const taskId = taskDialog.dataset.taskId;
     const projectId = getActiveProjectId();
-    
+
     if (!projectId) return;
-    
+
     const taskData = {
         ...getTaskFormData(),
         status: taskDialog.dataset.status,
     };
-    
+
     if (taskId) {
         DataManager.Tasks.update(projectId, parseInt(taskId), taskData);
     } else {
         DataManager.Tasks.add(projectId, taskData);
     }
-    
+
     closeDialog(taskDialog, clearTaskForm);
     refreshTaskView();
 });
