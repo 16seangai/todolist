@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+  </head>
+  <body>
+    <div class="sidebar">
+        <h1>Projects</h1>
+        <ul class="project-list">
+            <!-- Dynamic Content -->
+        </ul>
+        <button id="add-project-btn">+</button>
+    </div>
+
+    <div class="main">
+        <h1>Tasks - Default Project</h1>
+        <div class="task-board">
+            <div class="task-column" data-status="to-do">
+                <header>
+                    <h2>To Do</h2>
+                    <button class="add-task-btn">+</button>
+                </header>
+                <ul class="task-list">
+                    <!-- Dynamic Content -->
+                </ul>
+            </div>
+            <div class="task-column" data-status="in-progress">
+                <header>
+                    <h2>In Progress</h2>
+                    <button class="add-task-btn">+</button>
+                </header>
+                <ul class="task-list">
+                    <!-- Dynamic Content -->
+                </ul>
+            </div>
+            <div class="task-column" data-status="done">
+                <header>
+                    <h2>Done</h2>
+                    <button class="add-task-btn">+</button>
+                </header>
+                <ul class="task-list">
+                    <!-- Dynamic Content -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <dialog id="project-dialog">
+        <form method="dialog" class="project-form">
+            <label for="project-name">Project Name:</label>
+            <input type="text" name="project-name" required>
+
+            <menu>
+                <button value="save">Save</button>
+                <button value="cancel">Cancel</button>
+            </menu>
+        </form>
+    </dialog>
+
+    <dialog id="task-dialog">
+        <form method="dialog" class="task-form">
+            <label for="task-name">Task Name:</label>
+            <input type="text" name="task-name" required>
+
+            <label for="description">Description:</label>
+            <textarea name="description"></textarea>
+
+            <label for="priority">Priority:</label>
+            <select name="priority">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+            </select>
+
+            <label for="deadline">Deadline:</label>
+            <input type="date" name="deadline">
+            
+            <menu>
+                <button value="save">Save</button>
+                <button value="cancel">Cancel</button>
+                <button value="delete">🗑️</button>
+            </menu>
+        </form>
+    </dialog>
+  </body>
+</html>
